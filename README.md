@@ -18,6 +18,32 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
+Backend
+Navigate to the backend/venv folder and create a .env file with the following content:
+```bash
+MONGODB_URI=your_mongodb_uri_here
+```
+
+Run the backend:
+```bash
+cd backend/venv
+python api.py
+```
+
+Running the Application
+Make sure to run the frontend and backend in separate terminals:
+Terminal 1 (Backend):
+```bash
+cd backend/venv
+python api.py
+```
+
+Terminal 2 (Frontend):
+```bash
+npm install
+npm run dev
+```
+
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
 ## Learn More
