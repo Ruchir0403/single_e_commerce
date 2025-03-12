@@ -15,7 +15,7 @@ type Product = {
 type ProductCardProps = {
   product: Product;
   onDelete: (id: string) => void;
-  onCartUpdate?: () => void;  // New prop for cart refresh
+  onCartUpdate?: () => void;
 };
 
 const ProductCard: React.FC<ProductCardProps> = ({ product, onDelete, onCartUpdate }) => {
@@ -23,7 +23,6 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onDelete, onCartUpda
     try {
       await addToCart(product._id);
       alert('Product added to cart');
-      // Notify parent to update cart immediately
       if (onCartUpdate) {
         onCartUpdate();
       }
@@ -47,33 +46,28 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onDelete, onCartUpda
 
   return (
     <motion.div
-      className="border p-4 rounded shadow-lg bg-white"
-      whileHover={{ scale: 1.05 }}
+      className="bg-white rounded shadow-sm hover:shadow-md p-4 transition duration-300"
+      whileHover={{ scale: 1.02 }}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
     >
       <img
         src={product.image}
         alt={product.name}
         className="w-full h-40 object-cover rounded"
       />
-      <h2 className="text-xl mt-2 font-semibold text-gray-800">
-        {product.name}
-      </h2>
-      <p className="mt-1 font-medium text-gray-900">
-        ${product.price}
-      </p>
+      <h2 className="text-xl mt-2 font-semibold text-gray-800">{product.name}</h2>
+      <p className="mt-1 font-medium text-gray-900">${product.price}</p>
       <div className="flex justify-between mt-4">
         <button
           onClick={handleAddToCart}
-          className="bg-blue-500 hover:bg-blue-600 text-white py-1 px-3 rounded transition duration-300"
+          className="bg-pink-500 hover:bg-pink-600 text-white py-1 px-3 rounded transition duration-300"
         >
           Add to Cart
         </button>
         <button
           onClick={handleDelete}
-          className="bg-red-500 hover:bg-red-600 text-white py-1 px-3 rounded transition duration-300"
+          className="bg-gray-300 hover:bg-gray-400 text-gray-700 py-1 px-3 rounded transition duration-300"
         >
           Delete
         </button>

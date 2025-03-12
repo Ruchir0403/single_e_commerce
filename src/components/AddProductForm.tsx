@@ -45,7 +45,7 @@ const AddProductForm: React.FC<Props> = ({ onProductAdded }) => {
         <input
           type="text"
           placeholder="Product Name"
-          className="border p-2 w-full bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300"
+          className="border p-2 w-full bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-pink-500 transition duration-300"
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
@@ -54,7 +54,7 @@ const AddProductForm: React.FC<Props> = ({ onProductAdded }) => {
         <input
           type="number"
           placeholder="Price"
-          className="border p-2 w-full bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300"
+          className="border p-2 w-full bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-pink-500 transition duration-300"
           value={price}
           onChange={(e) => setPrice(e.target.value)}
         />
@@ -63,14 +63,14 @@ const AddProductForm: React.FC<Props> = ({ onProductAdded }) => {
         <input
           type="text"
           placeholder="Image URL"
-          className="border p-2 w-full bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300"
+          className="border p-2 w-full bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-pink-500 transition duration-300"
           value={image}
           onChange={(e) => setImage(e.target.value)}
         />
       </div>
-      <button 
-        type="submit" 
-        className="bg-green-500 hover:bg-green-600 transition duration-300 text-white py-2 px-4 rounded w-full"
+      <button
+        type="submit"
+        className="bg-pink-500 hover:bg-pink-600 transition duration-300 text-white py-2 px-4 rounded w-full"
       >
         Add Product
       </button>

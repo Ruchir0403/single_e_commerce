@@ -35,7 +35,7 @@ const ProductList: React.FC<ProductListProps> = ({ onCartUpdate }) => {
   }, []);
 
   const handleDelete = (id: string) => {
-    setProducts(products.filter(product => product._id !== id));
+    setProducts(products.filter((product) => product._id !== id));
   };
 
   return (
@@ -44,14 +44,13 @@ const ProductList: React.FC<ProductListProps> = ({ onCartUpdate }) => {
       className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      transition={{ staggerChildren: 0.1 }}
     >
       {products.map((product) => (
-        <ProductCard 
-          key={product._id} 
-          product={product} 
-          onDelete={handleDelete} 
-          onCartUpdate={onCartUpdate}  // Pass the callback here
+        <ProductCard
+          key={product._id}
+          product={product}
+          onDelete={handleDelete}
+          onCartUpdate={onCartUpdate}
         />
       ))}
     </motion.div>

@@ -22,7 +22,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
           onClick={onClose}
         >
           <motion.div
-            className="bg-gray-100 p-6 rounded shadow-lg relative max-w-md w-full mx-4"
+            className="bg-white p-6 rounded shadow-lg relative max-w-md w-full mx-4"
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.8, opacity: 0 }}
