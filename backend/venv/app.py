@@ -3,11 +3,11 @@ from flask_cors import CORS
 from pymongo import MongoClient
 from bson.objectid import ObjectId
 import os
-from dotenv import load_dotenv 
+from dotenv import load_dotenv
 from werkzeug.security import generate_password_hash, check_password_hash
 import datetime
 
-load_dotenv() 
+load_dotenv()
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
@@ -36,9 +36,9 @@ def register_admin():
         return jsonify({'error': 'Email already in use'}), 400
     
     hashed_password = generate_password_hash(password)
-    user = {'email': email, 'password': hashed_password, 'phone': phone}
+    user = {'email': email, 'password': hashed_password, 'phone': phone, 'role': 'admin'}
     users_collection.insert_one(user)
-    return jsonify({'message': 'User created'}), 201
+    return jsonify({'message': 'Admin user created'}), 201
 
 @app.route('/api/admin/login', methods=['POST'])
 def login_admin():
@@ -46,13 +46,13 @@ def login_admin():
     email = data.get('email')
     password = data.get('password')
 
-    user = users_collection.find_one({'email': email})
+    user = users_collection.find_one({'email': email, 'role': 'admin'})
     if not user or not check_password_hash(user['password'], password):
         return jsonify({'error': 'Invalid credentials'}), 401
 
     # On successful login, store the admin's email in the session.
     session['admin'] = email
-    return jsonify({'message': 'Login successful'}), 200
+    return jsonify({'message': 'Admin login successful'}), 200
 
 # Logout endpoint: clears the session.
 @app.route('/api/admin/logout', methods=['POST'])
@@ -63,6 +63,53 @@ def logout_admin():
 @app.route('/api/admin/check-auth', methods=['GET'])
 def check_auth():
     if 'admin' in session:
+        return jsonify({'authenticated': True}), 200
+    return jsonify({'error': 'Not authenticated'}), 401
+
+# User Registration
+@app.route('/api/user/register', methods=['POST'])
+def register_user():
+    data = request.get_json()
+    email = data.get('email')
+    password = data.get('password')
+    phone = data.get('phone')
+
+    if not email or not password or not phone:
+        return jsonify({'error': 'All fields required'}), 400
+
+    if users_collection.find_one({'email': email}):
+        return jsonify({'error': 'Email already in use'}), 400
+
+    hashed_password = generate_password_hash(password)
+    user = {'email': email, 'password': hashed_password, 'phone': phone, 'role': 'user'}
+    users_collection.insert_one(user)
+    return jsonify({'message': 'User created successfully'}), 201
+
+# User Login
+@app.route('/api/user/login', methods=['POST'])
+def login_user():
+    data = request.get_json()
+    email = data.get('email')
+    password = data.get('password')
+
+    user = users_collection.find_one({'email': email, 'role': 'user'})
+    if not user or not check_password_hash(user['password'], password):
+        return jsonify({'error': 'Invalid credentials'}), 401
+
+    # Store user email in session
+    session['user'] = email
+    return jsonify({'message': 'User login successful'}), 200
+
+# User Logout
+@app.route('/api/user/logout', methods=['POST'])
+def logout_user():
+    session.pop('user', None)
+    return jsonify({'message': 'User logged out successfully'}), 200
+
+# Check User Authentication
+@app.route('/api/user/check-auth', methods=['GET'])
+def check_user_auth():
+    if 'user' in session:
         return jsonify({'authenticated': True}), 200
     return jsonify({'error': 'Not authenticated'}), 401
 

@@ -1,10 +1,29 @@
-// src/components/Header.tsx
 'use client'
 
 import React from 'react';
 import { motion } from 'framer-motion';
+import { useRouter } from 'next/navigation';
 
 const Header: React.FC = () => {
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    try {
+      const res = await fetch('http://localhost:5000/api/user/logout', {
+        method: 'POST',
+        credentials: 'include',
+      });
+      if (res.ok) {
+        router.push('/');
+      } else {
+        alert('Logout failed');
+      }
+    } catch (error) {
+      console.error(error);
+      alert('Logout failed');
+    }
+  };
+
   return (
     <motion.header
       className="bg-white text-gray-800 py-4 shadow-sm"
@@ -30,6 +49,14 @@ const Header: React.FC = () => {
               <a href="#cart" className="hover:text-pink-600 transition">
                 Cart
               </a>
+            </li>
+            <li>
+              <button
+                onClick={handleLogout}
+                className="hover:text-pink-600 transition focus:outline-none"
+              >
+                Logout
+              </button>
             </li>
           </ul>
         </nav>
