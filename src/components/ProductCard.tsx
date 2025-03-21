@@ -14,18 +14,22 @@ type Product = {
 
 type ProductCardProps = {
   product: Product;
-  onDelete: (id: string) => void;
+  isAdmin?: boolean;
+  onDelete?: (id: string) => void;
   onCartUpdate?: () => void;
 };
 
-const ProductCard: React.FC<ProductCardProps> = ({ product, onDelete, onCartUpdate }) => {
+const ProductCard: React.FC<ProductCardProps> = ({
+  product,
+  isAdmin = false,
+  onDelete,
+  onCartUpdate,
+}) => {
   const handleAddToCart = async () => {
     try {
       await addToCart(product._id);
       alert('Product added to cart');
-      if (onCartUpdate) {
-        onCartUpdate();
-      }
+      if (onCartUpdate) onCartUpdate();
     } catch (error) {
       console.error(error);
       alert('Failed to add product to cart');
@@ -33,14 +37,13 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onDelete, onCartUpda
   };
 
   const handleDelete = async () => {
-    if (confirm('Are you sure you want to delete this product?')) {
-      try {
-        await deleteProduct(product._id);
-        onDelete(product._id);
-      } catch (error) {
-        console.error(error);
-        alert('Failed to delete product');
-      }
+    if (!confirm('Are you sure you want to delete this product?')) return;
+    try {
+      await deleteProduct(product._id);
+      if (onDelete) onDelete(product._id);
+    } catch (error) {
+      console.error(error);
+      alert('Failed to delete product');
     }
   };
 
@@ -65,12 +68,14 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onDelete, onCartUpda
         >
           Add to Cart
         </button>
-        <button
-          onClick={handleDelete}
-          className="bg-gray-300 hover:bg-gray-400 text-gray-700 py-1 px-3 rounded transition duration-300"
-        >
-          Delete
-        </button>
+        {isAdmin && (
+          <button
+            onClick={handleDelete}
+            className="bg-gray-300 hover:bg-gray-400 text-gray-700 py-1 px-3 rounded transition duration-300"
+          >
+            Delete
+          </button>
+        )}
       </div>
     </motion.div>
   );

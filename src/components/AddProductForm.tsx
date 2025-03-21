@@ -1,8 +1,6 @@
-// src/components/AddProductForm.tsx
 'use client'
 
 import React, { useState } from 'react';
-import { createProduct } from '@/lib/api';
 import { motion } from 'framer-motion';
 
 type Props = {
@@ -20,32 +18,46 @@ const AddProductForm: React.FC<Props> = ({ onProductAdded }) => {
       alert('Please fill in all fields');
       return;
     }
+    const token = localStorage.getItem('adminToken');
+
     try {
-      await createProduct({ name, price: Number(price), image });
-      setName('');
-      setPrice('');
-      setImage('');
-      onProductAdded();
+      const res = await fetch("http://localhost:5000/api/products", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": token || "",
+        },
+        body: JSON.stringify({ name, price: Number(price), image }),
+      });
+      if (res.ok) {
+        setName('');
+        setPrice('');
+        setImage('');
+        onProductAdded();
+      } else {
+        const data = await res.json();
+        alert(data.error || "Failed to add product");
+      }
     } catch (error) {
       console.error(error);
-      alert('Failed to add product');
+      alert("Failed to add product");
     }
   };
 
   return (
     <motion.form
       onSubmit={handleSubmit}
-      className="mb-4"
-      initial={{ opacity: 0, y: -10 }}
+      className="bg-white bg-opacity-80 p-6 rounded-lg shadow-md"
+      initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
+      transition={{ duration: 0.5 }}
     >
-      <h2 className="text-2xl font-bold mb-4 text-gray-800">Add New Product</h2>
+      <h2 className="text-2xl font-bold mb-4 text-gray-900">Add New Product</h2>
       <div className="mb-4">
         <input
           type="text"
           placeholder="Product Name"
-          className="border p-2 w-full bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-pink-500 transition duration-300"
+          className="border border-gray-300 p-2 w-full rounded text-gray-900 focus:outline-none focus:ring-2 focus:ring-pink-500 transition"
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
@@ -54,7 +66,7 @@ const AddProductForm: React.FC<Props> = ({ onProductAdded }) => {
         <input
           type="number"
           placeholder="Price"
-          className="border p-2 w-full bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-pink-500 transition duration-300"
+          className="border border-gray-300 p-2 w-full rounded text-gray-900 focus:outline-none focus:ring-2 focus:ring-pink-500 transition"
           value={price}
           onChange={(e) => setPrice(e.target.value)}
         />
@@ -63,14 +75,14 @@ const AddProductForm: React.FC<Props> = ({ onProductAdded }) => {
         <input
           type="text"
           placeholder="Image URL"
-          className="border p-2 w-full bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-pink-500 transition duration-300"
+          className="border border-gray-300 p-2 w-full rounded text-gray-900 focus:outline-none focus:ring-2 focus:ring-pink-500 transition"
           value={image}
           onChange={(e) => setImage(e.target.value)}
         />
       </div>
       <button
         type="submit"
-        className="bg-pink-500 hover:bg-pink-600 transition duration-300 text-white py-2 px-4 rounded w-full"
+        className="bg-pink-500 hover:bg-pink-600 text-white py-2 px-4 rounded w-full transition duration-300 shadow"
       >
         Add Product
       </button>

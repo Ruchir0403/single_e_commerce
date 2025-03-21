@@ -1,14 +1,18 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, session
 from flask_cors import CORS
 from pymongo import MongoClient
 from bson.objectid import ObjectId
 import os
 from dotenv import load_dotenv 
+from werkzeug.security import generate_password_hash, check_password_hash
+import datetime
 
 load_dotenv() 
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, supports_credentials=True)
+
+app.secret_key = os.getenv('SECRET_KEY', 'your_secret_key')
 
 # Connect to MongoDB (adjust the URI as needed)
 MONGO_URI = os.getenv('MONGO_URI', 'mongodb://localhost:27017/')
@@ -16,8 +20,53 @@ client = MongoClient(MONGO_URI)
 db = client['ecommerce']
 products_collection = db['products']
 cart_collection = db['cart']
+users_collection = db['users']
 
-# Retrieve all products
+@app.route('/api/admin/register', methods=['POST'])
+def register_admin():
+    data = request.get_json()
+    email = data.get('email')
+    password = data.get('password')
+    phone = data.get('phone')
+    
+    if not email or not password or not phone:
+        return jsonify({'error': 'All fields required'}), 400
+
+    if users_collection.find_one({'email': email}):
+        return jsonify({'error': 'Email already in use'}), 400
+    
+    hashed_password = generate_password_hash(password)
+    user = {'email': email, 'password': hashed_password, 'phone': phone}
+    users_collection.insert_one(user)
+    return jsonify({'message': 'User created'}), 201
+
+@app.route('/api/admin/login', methods=['POST'])
+def login_admin():
+    data = request.get_json()
+    email = data.get('email')
+    password = data.get('password')
+
+    user = users_collection.find_one({'email': email})
+    if not user or not check_password_hash(user['password'], password):
+        return jsonify({'error': 'Invalid credentials'}), 401
+
+    # On successful login, store the admin's email in the session.
+    session['admin'] = email
+    return jsonify({'message': 'Login successful'}), 200
+
+# Logout endpoint: clears the session.
+@app.route('/api/admin/logout', methods=['POST'])
+def logout_admin():
+    session.pop('admin', None)
+    return jsonify({'message': 'Logged out successfully'}), 200
+
+@app.route('/api/admin/check-auth', methods=['GET'])
+def check_auth():
+    if 'admin' in session:
+        return jsonify({'authenticated': True}), 200
+    return jsonify({'error': 'Not authenticated'}), 401
+
+# Retrieve all products (Public endpoint)
 @app.route('/api/products', methods=['GET'])
 def get_products():
     products = list(products_collection.find())
@@ -25,7 +74,7 @@ def get_products():
         product['_id'] = str(product['_id'])
     return jsonify(products)
 
-# Add a new product
+# Add a new product (Protected endpoint)
 @app.route('/api/products', methods=['POST'])
 def add_product():
     data = request.get_json()
@@ -39,7 +88,7 @@ def add_product():
     product['_id'] = str(result.inserted_id)
     return jsonify(product), 201
 
-# Delete a product
+# Delete a product (Protected endpoint)
 @app.route('/api/products/<product_id>', methods=['DELETE'])
 def delete_product(product_id):
     result = products_collection.delete_one({'_id': ObjectId(product_id)})
@@ -48,7 +97,7 @@ def delete_product(product_id):
     else:
         return jsonify({'error': 'Product not found'}), 404
 
-# Retrieve the cart items
+# Retrieve the cart items (Public endpoint)
 @app.route('/api/cart', methods=['GET'])
 def get_cart():
     cart_items = list(cart_collection.find())
@@ -56,7 +105,7 @@ def get_cart():
         item['_id'] = str(item['_id'])
     return jsonify(cart_items)
 
-# Add a product to the cart
+# Add a product to the cart (Public endpoint)
 @app.route('/api/cart', methods=['POST'])
 def add_to_cart():
     data = request.get_json()
@@ -73,11 +122,10 @@ def add_to_cart():
         'image': product['image']
     }
     result = cart_collection.insert_one(cart_item)
-    # Add the generated _id to the cart_item object so the front-end can use it immediately
     cart_item['_id'] = str(result.inserted_id)
     return jsonify(cart_item), 201
 
-# Remove an item from the cart
+# Remove an item from the cart (Public endpoint)
 @app.route('/api/cart/<cart_item_id>', methods=['DELETE'])
 def remove_from_cart(cart_item_id):
     result = cart_collection.delete_one({'_id': ObjectId(cart_item_id)})

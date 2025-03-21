@@ -1,4 +1,3 @@
-// src/components/ProductList.tsx
 'use client'
 
 import React, { useEffect, useState } from 'react';
@@ -15,9 +14,11 @@ type Product = {
 
 type ProductListProps = {
   onCartUpdate?: () => void;
+  isAdmin?: boolean;
+  onDelete?: (id: string) => void;
 };
 
-const ProductList: React.FC<ProductListProps> = ({ onCartUpdate }) => {
+const ProductList: React.FC<ProductListProps> = ({ onCartUpdate, isAdmin = false, onDelete }) => {
   const [products, setProducts] = useState<Product[]>([]);
 
   const loadProducts = async () => {
@@ -36,12 +37,13 @@ const ProductList: React.FC<ProductListProps> = ({ onCartUpdate }) => {
 
   const handleDelete = (id: string) => {
     setProducts(products.filter((product) => product._id !== id));
+    if (onDelete) onDelete(id);
   };
 
   return (
     <motion.div
       id="products"
-      className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6"
+      className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mt-6"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
     >
@@ -49,6 +51,7 @@ const ProductList: React.FC<ProductListProps> = ({ onCartUpdate }) => {
         <ProductCard
           key={product._id}
           product={product}
+          isAdmin={isAdmin}
           onDelete={handleDelete}
           onCartUpdate={onCartUpdate}
         />
