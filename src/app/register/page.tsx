@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
+import Link from 'next/link';
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -111,9 +112,7 @@ export default function RegisterPage() {
 
           <p className="mt-6 text-center text-sm text-gray-600">
             Already have an account?{' '}
-            <a href="/" className="text-blue-600 hover:underline">
-              Sign in
-            </a>
+            <Link href="/" className="text-blue-600 hover:underline">Sign in</Link>
           </p>
         </motion.div>
       </div>
