@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 const AdminLogin = () => {
   const [email, setEmail] = useState("");
@@ -54,12 +55,12 @@ const AdminLogin = () => {
         </button>
         <p className="mt-6 text-center text-gray-700">
           Don&apos;t have an account?{" "}
-          <a
+          <Link
             href="/admin-register"
             className="text-pink-500 hover:underline font-medium"
           >
             Register
-          </a>
+          </Link>
         </p>
       </form>
     </div>

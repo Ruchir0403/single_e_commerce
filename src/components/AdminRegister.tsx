@@ -2,6 +2,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 const AdminRegister = () => {
   const [email, setEmail] = useState("");
@@ -63,12 +64,7 @@ const AdminRegister = () => {
         </button>
         <p className="mt-6 text-center text-gray-700">
           Already have an admin account?{" "}
-          <a
-            href="/admin-login"
-            className="text-pink-500 hover:underline font-medium"
-          >
-            Login
-          </a>
+          <Link href="/admin-login" className="text-pink-500 hover:underline font-medium">Login</Link>
         </p>
       </form>
     </div>
