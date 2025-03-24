@@ -53,7 +53,7 @@ const AdminLogin = () => {
           Login
         </button>
         <p className="mt-6 text-center text-gray-700">
-          Don't have an account?{" "}
+          Don&apos;t have an account?{" "}
           <a
             href="/admin-register"
             className="text-pink-500 hover:underline font-medium"

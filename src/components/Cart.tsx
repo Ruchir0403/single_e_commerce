@@ -4,6 +4,7 @@
 import React, { useEffect, useState } from 'react';
 import { fetchCart, removeFromCart } from '@/lib/api';
 import { motion, AnimatePresence } from 'framer-motion';
+import Image from 'next/image'; // Import Next.js Image component
 
 type CartItem = {
   _id: string;
@@ -60,9 +61,11 @@ const Cart: React.FC<CartProps> = ({ refreshKey }) => {
               exit={{ opacity: 0, x: 50 }}
               transition={{ duration: 0.3 }}
             >
-              <img
+              <Image
                 src={item.image}
                 alt={item.name}
+                width={64} // Specify a fixed width
+                height={64} // Specify a fixed height
                 className="w-16 h-16 object-cover rounded"
               />
               <div>

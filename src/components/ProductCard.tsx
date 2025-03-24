@@ -4,6 +4,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { addToCart, deleteProduct } from '@/lib/api';
+import Image from 'next/image'; // Import Next.js Image component
 
 type Product = {
   _id: string;
@@ -54,9 +55,11 @@ const ProductCard: React.FC<ProductCardProps> = ({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
     >
-      <img
+      <Image
         src={product.image}
         alt={product.name}
+        width={400}  // Adjust the width as needed
+        height={160} // Adjust the height as needed to match h-40 styling
         className="w-full h-40 object-cover rounded"
       />
       <h2 className="text-xl mt-2 font-semibold text-gray-800">{product.name}</h2>

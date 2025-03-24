@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link'; // Import Link
 import { motion } from 'framer-motion';
 
 export default function LoginPage() {
@@ -109,6 +110,7 @@ export default function LoginPage() {
             <button
               className="w-full border border-gray-300 rounded-md py-2 flex items-center justify-center hover:bg-gray-100 transition"
             >
+              {/* Google Icon */}
               <svg
                 className="w-5 h-5 mr-2"
                 viewBox="0 0 48 48"
@@ -136,6 +138,7 @@ export default function LoginPage() {
             <button
               className="w-full border border-gray-300 rounded-md py-2 flex items-center justify-center hover:bg-gray-100 transition"
             >
+              {/* LinkedIn Icon */}
               <svg
                 className="w-5 h-5 mr-2"
                 fill="currentColor"
@@ -149,9 +152,9 @@ export default function LoginPage() {
 
           <p className="mt-6 text-center text-sm text-gray-600">
             Don&apos;t have an account?{' '}
-            <a href="/register" className="text-blue-600 hover:underline">
+            <Link href="/register" className="text-blue-600 hover:underline">
               Sign up
-            </a>
+            </Link>
           </p>
         </motion.div>
       </div>
