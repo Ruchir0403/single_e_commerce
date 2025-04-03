@@ -10,7 +10,7 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const res = await fetch('http://localhost:5000/api/admin/check-auth', {
+        const res = await fetch('https://backend-sin-ecom.onrender.com/api/admin/check-auth', {
           method: 'GET',
           credentials: 'include'
         });

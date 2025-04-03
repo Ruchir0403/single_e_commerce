@@ -13,7 +13,7 @@ const AdminLogin = () => {
     e.preventDefault();
     setError("");
 
-    const res = await fetch("http://localhost:5000/api/admin/login", {
+    const res = await fetch("https://backend-sin-ecom.onrender.com/api/admin/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",

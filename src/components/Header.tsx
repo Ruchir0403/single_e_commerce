@@ -9,7 +9,7 @@ const Header: React.FC = () => {
 
   const handleLogout = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/user/logout', {
+      const res = await fetch('https://backend-sin-ecom.onrender.com/api/user/logout', {
         method: 'POST',
         credentials: 'include',
       });

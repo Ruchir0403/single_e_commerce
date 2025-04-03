@@ -14,7 +14,7 @@ export default function RegisterPage() {
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const res = await fetch('http://localhost:5000/api/user/register', {
+      const res = await fetch('https://backend-sin-ecom.onrender.com/api/user/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -25,7 +25,8 @@ export default function RegisterPage() {
 
       if (res.ok) {
         // Registration successful, redirect to the login page.
-        router.push('/login');
+        alert('Registration successful. Please login.');
+        router.push('/');
       } else {
         const data = await res.json();
         alert(data.error || 'Registration failed');

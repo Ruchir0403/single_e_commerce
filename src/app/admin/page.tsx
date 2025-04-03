@@ -16,7 +16,7 @@ const AdminPanel = () => {
 
   const handleLogout = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/admin/logout', {
+      const res = await fetch('https://backend-sin-ecom.onrender.com/api/admin/logout', {
         method: 'POST',
         credentials: 'include',
       });
